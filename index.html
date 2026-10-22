@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapido - Bike Taxi Booking</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f5f7;
+      color: #222;
+    }
+
+    header {
+      background: #ffca05;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px #0001;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #111;
+    }
+
+    header span {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .booking-card, .map-card {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 5px 22px #0000000d;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+      color: #666;
+
+
+    .subtitle {
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .location-input {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 15px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #16a34a;
+      flex-shrink: 0;
+    }
+
+    .dot.red {
+      background: #ef4444;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    h3 {
+      margin: 25px 0 15px;
+    }
+
+    .ride-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .ride {
+      border: 2px solid #eee;
+      padding: 14px 5px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      background: white;
+      transition: 0.2s;
+    }
+
+    .ride.selected {
+      border-color: #ffca05;
+      background: #fff9d9;
+    }
+
+    .ride .emoji {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .ride strong {
+      font-size: 14px;
+    }
+
+    .ride p {
+      font-size: 13px;
+      margin-top: 7px;
+      color: #555;
+    }
+
+    .book-btn {
+      background: #ffca05;
+      border: none;
+      width: 100%;
+      padding: 16px;
+      margin-top: 25px;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .book-btn:hover {
+      background: #f1b900;
+    }
+
+    .map-card {
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map {
+      flex: 1;
+      min-height: 270px;
+      border-radius: 14px;
+      background-color: #e6eddf;
+      background-image:
+        linear-gradient(35deg, transparent 47%, white 48%, white 51%, transparent 52%),
+        linear-gradient(120deg, transparent 42%, #fff 43%, #fff 46%, transparent 47%),
+        linear-gradient(90deg, transparent 70%, #d4dfca 71%);
+      background-size: 150px 120px, 190px 160px, 100% 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-pin {
+      font-size: 48px;
+      filter: drop-shadow(0 3px 3px #0002);
+    }
+
+    .map-label {
+      position: absolute;
+      bottom: 15px;
+      background: white;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .info {
+      margin-top: 18px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        grid-template-columns: 1fr;
+        margin: 15px auto;
+        padding: 12px;
+      }
+
+      header {
+        padding: 16px 5%;
+      }
+
+      .booking-card, .map-card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .map-card {
+        min-height: 350px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">rapido</div>
+    <span>Bike Taxi | Auto | Cab</span>
+  </header>
+
+  <main class="container">
+
+    <section class="booking-card">
+      <h1>Go anywhere, anytime.</h1>
+      <p class="subtitle">
+        Book a quick and affordable ride to your destination.
+      </p>
+
+      <div class="location-input">
+        <span class="dot"></span>
+        <input id="pickup" type="text"
+          placeholder="Enter pickup location">
+      </div>
+
+      <div class="location-input">
+        <span class="dot red"></span>
+        <input id="drop" type="text"
+          placeholder="Enter drop location">
+      </div>
+
+      <h3>Choose your ride</h3>
+
+      <div class="ride-options">
+        <div class="ride selected" data-ride="Bike" data-fare="40">
+          <span class="emoji">🏍️</span>
+          <strong>Bike</strong>
+          <p>₹40 approx.</p>
+        </div>
+
+        <div class="ride" data-ride="Auto" data-fare="70">
+          <span class="emoji">🛺</span>
+          <strong>Auto</strong>
+          <p>₹70 approx.</p>
+        </div>
+
+        <div class="ride" data-ride="Cab" data-fare="120">
+          <span class="emoji">🚕</span>
+          <strong>Cab</strong>
+          <p>₹120 approx.</p>
+        </div>
+      </div>
+
+      <button class="book-btn" id="bookBtn">
+        Book Bike
+      </button>
+
+      <p class="info" id="message">
+        Estimated fares are examples for demonstration.
+        Actual fares may vary.
+      </p>
+    </section>
+
+    <section class="map-card">
+      <h2>Your ride, your way</h2>
+      <p class="info">
+        Enter your locations to plan your journey.
+      </p>
+
+      <div class="map">
+        <span class="map-pin">📍</span>
+        <span class="map-label">Your ride starts here</span>
+      </div>
+
+      <p class="info">
+        🟢 Pickup location<br>
+        🔴 Drop location<br>
+        ⚡ Quick and convenient travel
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    Demo ride-booking interface · Not an official Rapido app
+  </footer>
+
+  <script>
+    const rides = document.querySelectorAll(".ride");
+    const bookBtn = document.getElementById("bookBtn");
+    const message = document.getElementById("message");
+
+    let selectedRide = "Bike";
+    let selectedFare = 40;
+
+    rides.forEach(function(ride) {
+      ride.addEventListener("click", function() {
+        rides.forEach(function(item) {
+          item.classList.remove("selected");
+        });
+
+        ride.classList.add("selected");
+
+        selectedRide = ride.dataset.ride;
+        selectedFare = Number(ride.dataset.fare);
+
+        bookBtn.textContent = "Book " + selectedRide;
+        message.textContent =
+          "Estimated fare: ₹" + selectedFare +
+          ". Actual fare may vary.";
+      });
+    });
+
+    bookBtn.addEventListener("click", function() {
+      const pickup =
+        document.getElementById("pickup").value.trim();
+      const drop =
+        document.getElementById("drop").value.trim();
+
+      if (!pickup || !drop) {
+        message.textContent =
+          "Please enter both pickup and drop locations.";
+        return;
+      }
+
+      message.textContent =
+        "Ride summary: " + pickup + " to " + drop +
+        " | " + selectedRide +
+        " | Estimated fare: ₹" + selectedFare +
+        ". This is a demo; no ride has been booked.";
+    });
+  </script>
+
+</body>
+</html>
+
